@@ -98,6 +98,28 @@ after 7 days.
 
 Until that is configured, use Export to save a full JSON snapshot by hand.
 
+## Deploying
+
+A push to the default branch builds and publishes to GitHub Pages. The
+workflow enables Pages on the repository the first time it runs, so there is
+nothing to click.
+
+Pages serves from a subpath, so the build reads `VITE_BASE`. Everything that
+needs the base path derives it from there: the asset URLs, the manifest scope
+and start URL, the service worker navigation fallback, and the notification
+icon. Deploying to a root domain instead needs no code change, only
+`VITE_BASE=/`.
+
+`vercel.json` and `netlify.toml` are in the repo for that case. Both expect
+the root path, which is their default.
+
+To preview a subpath build locally, pass the same value to both commands:
+
+```bash
+VITE_BASE=/Biological-clock-/ npm run build
+VITE_BASE=/Biological-clock-/ npm run preview
+```
+
 ## Install on Android
 
 Open the deployed URL in Chrome and choose "Install app". Two entry points

@@ -6,10 +6,12 @@ declare const self: ServiceWorkerGlobalScope
 
 const REMINDER_TAG = 'health-log-reminder'
 const DB_NAME = 'health-log'
+// Vite replaces this at build time with the deployment's base path.
+const BASE = import.meta.env.BASE_URL
 
 precacheAndRoute(self.__WB_MANIFEST)
 cleanupOutdatedCaches()
-registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html')))
+registerRoute(new NavigationRoute(createHandlerBoundToURL(`${BASE}index.html`)))
 
 self.addEventListener('install', () => {
   void self.skipWaiting()
@@ -73,10 +75,10 @@ async function remindIfUnlogged(): Promise<void> {
   await self.registration.showNotification('Health Log', {
     body: 'Today is not logged yet. Six fields, under a minute.',
     tag: REMINDER_TAG,
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
+    icon: `${BASE}icon-192.png`,
+    badge: `${BASE}icon-192.png`,
     silent: true,
-    data: { url: '/#/today' },
+    data: { url: `${BASE}#/today` },
   })
 }
 
@@ -87,7 +89,7 @@ self.addEventListener('periodicsync', (event) => {
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close()
-  const url = (event.notification.data as { url?: string } | undefined)?.url ?? '/#/today'
+  const url = (event.notification.data as { url?: string } | undefined)?.url ?? `${BASE}#/today`
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(async (windows) => {
       const open = windows[0]

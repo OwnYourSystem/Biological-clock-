@@ -22,11 +22,21 @@ await page.waitForTimeout(800)
 
 // Seed 28 days of plausible data straight into the stores Dexie already made.
 await page.evaluate(async () => {
-  const db = await new Promise((res, rej) => {
-    const r = indexedDB.open('health-log')
-    r.onsuccess = () => res(r.result)
-    r.onerror = () => rej(r.error)
-  })
+  // Dexie creates the stores on the app's first query, so wait for them
+  // rather than guessing a delay.
+  const open = () =>
+    new Promise((res, rej) => {
+      const r = indexedDB.open('health-log')
+      r.onsuccess = () => res(r.result)
+      r.onerror = () => rej(r.error)
+    })
+  let db = await open()
+  for (let attempt = 0; attempt < 50 && !db.objectStoreNames.contains('days'); attempt++) {
+    db.close()
+    await new Promise((r) => setTimeout(r, 200))
+    db = await open()
+  }
+  if (!db.objectStoreNames.contains('days')) throw new Error('Dexie never created its stores')
   const put = (storeName, rows) =>
     new Promise((res, rej) => {
       const tx = db.transaction(storeName, 'readwrite')
