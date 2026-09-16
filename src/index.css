@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+/*
+  Health Log theme: black and blue.
+  Black is the surface. Blue is the only accent. Nothing else carries meaning
+  except the 3 semantic colours below, which mark data states, not decoration.
+*/
+@theme {
+  --color-ink-950: #000000;
+  --color-ink-900: #07080b;
+  --color-ink-850: #0b0d12;
+  --color-ink-800: #0f1218;
+  --color-ink-700: #161a22;
+  --color-ink-600: #222836;
+  --color-ink-500: #323a4c;
+  --color-ink-400: #5a6376;
+  --color-ink-300: #7d8698;
+  --color-ink-200: #a8b0c0;
+  --color-ink-100: #ced4df;
+  --color-ink-50: #eceff5;
+
+  --color-brand-900: #0a1733;
+  --color-brand-800: #10265a;
+  --color-brand-700: #1a3f8f;
+  --color-brand-600: #2456c7;
+  --color-brand-500: #2e6bff;
+  --color-brand-400: #5a8cff;
+  --color-brand-300: #8fb1ff;
+  --color-brand-200: #bed2ff;
+
+  --color-warn-500: #e0a12a;
+  --color-alert-500: #e04f4f;
+  --color-calm-500: #3fa98a;
+
+  --radius-card: 1.25rem;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  background: var(--color-ink-950);
+}
+
+body {
+  margin: 0;
+  color: var(--color-ink-50);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+input,
+button,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* Range slider, styled once here because Tailwind cannot reach the thumb. */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+input[type='range']::-webkit-slider-runnable-track {
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--color-ink-700);
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2.25rem;
+  width: 2.25rem;
+  margin-top: -0.875rem;
+  border-radius: 9999px;
+  background: var(--color-brand-500);
+  border: 3px solid var(--color-ink-950);
+}
+input[type='range']::-moz-range-track {
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--color-ink-700);
+}
+input[type='range']::-moz-range-thumb {
+  height: 2.25rem;
+  width: 2.25rem;
+  border-radius: 9999px;
+  background: var(--color-brand-500);
+  border: 3px solid var(--color-ink-950);
+}
+
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
