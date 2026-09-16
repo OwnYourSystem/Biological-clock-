@@ -100,9 +100,26 @@ Until that is configured, use Export to save a full JSON snapshot by hand.
 
 ## Deploying
 
-A push to the default branch builds and publishes to GitHub Pages. The
-workflow enables Pages on the repository the first time it runs, so there is
-nothing to click.
+A push to the default branch builds and publishes to GitHub Pages.
+
+**One-time setup, and it needs a repository admin.** Open Settings, then
+Pages, and set "Build and deployment" source to **GitHub Actions**. The
+workflow tries to do this itself through `actions/configure-pages`, but the
+token it runs with is refused: `Create Pages site failed. Resource not
+accessible by integration`. Creating a Pages site needs admin rights that a
+workflow token does not carry.
+
+While Pages is off, the deploy workflow fails on every push and CI still
+passes. That is the intended signal: a red deploy means the site is not live.
+The moment the source is set, the same workflow succeeds with no change, and
+the app is served at:
+
+```
+https://ownyoursystem.github.io/Biological-clock-/
+```
+
+If the deploy still fails after that, check Settings, then Actions, then
+General, and set workflow permissions to "Read and write".
 
 Pages serves from a subpath, so the build reads `VITE_BASE`. Everything that
 needs the base path derives it from there: the asset URLs, the manifest scope
