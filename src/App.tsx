@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { attemptDailyBackup } from './backup/drive'
+import { refreshReminders } from './notify/reminders'
 import { DailyLog } from './screens/DailyLog'
 import { EpisodeLog } from './screens/EpisodeLog'
 import { ExportScreen } from './screens/ExportScreen'
@@ -25,6 +26,8 @@ export default function App() {
     // marked persistent. Data is never lost is the second hard requirement.
     if (navigator.storage?.persist) void navigator.storage.persist()
     void attemptDailyBackup()
+    // Chrome drops the periodic sync tag when it pleases, so re-register it.
+    void refreshReminders()
   }, [])
 
   return (

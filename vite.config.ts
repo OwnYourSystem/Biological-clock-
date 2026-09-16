@@ -8,11 +8,15 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
+      // injectManifest, not generateSW, because the service worker carries the
+      // reminder logic: it has to read IndexedDB and answer a periodicsync.
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.ts',
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
-      workbox: {
+      injectManifest: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,webmanifest}'],
-        navigateFallback: 'index.html',
       },
       manifest: {
         name: 'Health Log',

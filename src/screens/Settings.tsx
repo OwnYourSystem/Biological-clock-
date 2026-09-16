@@ -1,10 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { store } from '../db/repo'
 import type { Settings } from '../domain/types'
 import { thresholdsReady } from '../domain/exertion'
 import { BACKUP_WARN_DAYS, daysSince } from '../backup/snapshot'
 import { backupToDrive, isDriveConfigured } from '../backup/drive'
+import {
+  disableReminders,
+  enableReminders,
+  REMINDER_STATE_TEXT,
+  reminderState,
+  type ReminderState,
+} from '../notify/reminders'
 import {
   Card,
   FieldLabel,
@@ -52,6 +59,13 @@ function SettingsForm({ settings }: { settings: Settings }) {
   const [morning, setMorning] = useState(settings.reminderTimeMorning)
   const [evening, setEvening] = useState(settings.reminderTimeEvening)
   const [message, setMessage] = useState<string | null>(null)
+  const [reminders, setReminders] = useState<ReminderState | null>(null)
+
+  // Reading the permission and the sync registration is a query to the
+  // browser, not to our own state, so it belongs in an effect.
+  useEffect(() => {
+    void reminderState().then(setReminders)
+  }, [])
 
   const since = daysSince(settings.lastBackupAt)
   const ready = thresholdsReady(settings)
@@ -102,7 +116,24 @@ function SettingsForm({ settings }: { settings: Settings }) {
       </Card>
 
       <Card>
-        <FieldLabel hint="2 a day, nothing else">Reminders</FieldLabel>
+        <FieldLabel hint={reminders === 'on' ? 'on' : 'off'}>Reminders</FieldLabel>
+        <div className="mb-3">
+          <Toggle
+            label="Remind me if the day is unlogged"
+            checked={reminders === 'on' || reminders === 'partial'}
+            onChange={async (value) => {
+              if (value) {
+                setReminders(await enableReminders())
+              } else {
+                await disableReminders()
+                setReminders('off')
+              }
+            }}
+          />
+        </div>
+        {reminders ? (
+          <p className="mb-3 text-sm leading-relaxed text-ink-400">{REMINDER_STATE_TEXT[reminders]}</p>
+        ) : null}
         <div className="flex gap-3">
           <TimeInput
             label="Morning"
