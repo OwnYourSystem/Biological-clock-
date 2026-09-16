@@ -1,5 +1,9 @@
-// Renders the app icons from inline SVG. Run with `npm run icons` after a
-// change to the mark. Output lands in public/ and is committed.
+// Renders the app icons from inline SVG. Output lands in public/ and is
+// committed, so this only runs when the mark changes.
+//
+// sharp is not a project dependency, because it would be installed on every
+// CI and deploy build for a file that changes once a year:
+//   npm i --no-save sharp && npm run icons
 import sharp from 'sharp'
 import { mkdir } from 'node:fs/promises'
 

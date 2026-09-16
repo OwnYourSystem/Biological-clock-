@@ -1,6 +1,8 @@
 // Manual smoke check. Not a test suite: it drives the built app in Chromium,
 // seeds a month of plausible data and writes a screenshot per screen.
-// Run: npm run build && npm run preview & npm run smoke
+// playwright is not a project dependency, for the same reason sharp is not:
+//   npm i --no-save playwright
+//   npm run build && npm run preview & npm run smoke
 import { chromium } from 'playwright'
 import { mkdirSync } from 'node:fs'
 

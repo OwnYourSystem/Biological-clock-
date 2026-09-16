@@ -72,9 +72,15 @@ npm test          # domain tests
 npm run lint      # oxlint
 npm run build     # typecheck, build, generate the service worker
 npm run preview   # serve the production build
-npm run icons     # regenerate the PWA icons from scripts/make-icons.mjs
-npm run smoke     # manual screenshot pass over every screen, needs preview running
 npm run audit     # dependency audit of what ships
+```
+
+Two scripts carry their own one-off dependency, so that neither CI nor a
+deploy installs a browser or an image library it never uses:
+
+```bash
+npm i --no-save sharp && npm run icons       # regenerate the PWA icons
+npm i --no-save playwright && npm run smoke  # screenshot every screen
 ```
 
 ## Drive backup
