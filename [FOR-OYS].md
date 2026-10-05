@@ -270,10 +270,14 @@ bugs in this build were invisible to every automated check I had.
 
 Not hidden, just not done:
 
-1. **The 2 daily reminders.** The settings store the times. Nothing schedules a
-   notification yet. Web push on Android needs a service worker notification
-   permission flow, and it is worth doing carefully rather than quickly.
-2. **The biometric prompt on app open.** Spec calls it optional. Not built.
-3. **Drive backup is wired but inert.** It needs your client ID and a GCP
+1. **The biometric prompt on app open.** Spec calls it optional. Not built, on
+   purpose: a passkey lockout on a local-only database loses your data.
+2. **Drive backup is wired but inert.** It needs your client ID and a GCP
    project in Production status.
-4. **The real UI skill.** Swap `minimum-deliveries-ui` in and I'll re-skin.
+3. **The real UI skill.** Swap `minimum-deliveries-ui` in and I'll re-skin.
+4. **The deploy.** The workflow is ready. GitHub Pages needs its source set to
+   GitHub Actions once, by a repository admin.
+
+Built since this was first written: the 2 daily reminders. They ride Periodic
+Background Sync, so they fire near the set time and not at it. A PWA has no
+reliable alarm clock without a server, and Settings says so.
